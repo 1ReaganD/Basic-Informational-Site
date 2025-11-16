@@ -1,30 +1,22 @@
-const http = require('http');
-const path = require('path');
-const fs = require('fs');
+const express = require('express');
+const app = express();
+const path = require('path')
+require('dotenv').config();
 
-const server = http.createServer((req, res) => {
-    let filePath = '';
+const PORT = process.env.PORT
 
-    if (req.url === '/') {
-        filePath = path.join(__dirname, 'index.html');
-    }else if(req.url === '/about') {
-        filePath = path.join(__dirname, 'about.html')
-    }else if(req.url === '/contact') {
-        filePath = path.join(__dirname, 'contactMe.html')
-    }else{
-        filePath = path.join(__dirname, '404.html')
-    }
-
-    fs.readFile(filePath, (err, data) => {
-        if (err) {
-            res.writeHead(500, {'Content-Type' : 'text/plain'});
-            res.end('Server Error')
-        }else{
-            res.writeHead(200, {"Content-Type" : 'text/html'})
-            res.end(data)
-        }
-    })
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'))
 })
-server.listen(3000, () => {
+
+app.get('/about', (req, res) => {
+    res.sendFile(path.join(__dirname, 'about.html'))
+})
+
+app.get('/contact', (req, res) => {
+    res.sendFile(path.join(__dirname, 'contactMe.html'))
+})
+
+app.listen(PORT, () => {
     console.log('Server is running')
 });
